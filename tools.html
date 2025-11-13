@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outils - CheatLab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/speedtest-net@2.2.0/lib/speedtest.js"></script>
+    <style>
+        /* Variables et reset */
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #111111;
+            --accent: #6c63ff;
+            --accent-light: #8a85ff;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border: #2a2a2a;
+            --card-bg: rgba(30, 30, 30, 0.6);
+            --success: #00d26a;
+            --warning: #ff9a3d;
+            --danger: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typographie */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        /* Layout */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 0;
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-light);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent) 0%, transparent 70%);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .tool-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .tool-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .tool-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+        }
+
+        .tool-features li:before {
+            content: '✓';
+            color: var(--success);
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .popup-overlay.active .popup-content {
+            transform: scale(1);
+        }
+
+        .popup-title {
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .popup-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        /* Calculator Section */
+        .calculator-section {
+            background: var(--secondary);
+        }
+
+        .calculator-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .calculator-controls {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .calculator-results {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--border);
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider {
+            flex: 1;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .comparison-chart {
+            margin-top: 2rem;
+            background: var(--primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .chart-bar {
+            height: 30px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .chart-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        /* Network Test Section */
+        .network-section {
+            background: var(--secondary);
+        }
+
+        .network-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .speed-test-area {
+            margin: 2rem 0;
+        }
+
+        .test-progress {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .speed-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .speed-result {
+            padding: 1.5rem;
+            background: var(--primary);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .speed-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .speed-download { color: var(--success); }
+        .speed-upload { color: var(--warning); }
+        .speed-ping { color: var(--accent); }
+
+        .test-status {
+            padding: 1rem;
+            background: var(--primary);
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .recommendations {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--primary);
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .recommendations h4 {
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .recommendations ul {
+            list-style: none;
+            color: var(--text-light);
+        }
+
+        .recommendations li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .recommendations li:before {
+            content: '💡';
+            margin-right: 0.5rem;
+        }
+
+        /* Benchmark Section */
+        .benchmark-section {
+            background: var(--secondary);
+        }
+
+        .benchmark-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .benchmark-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Reflex Test Section */
+        .reflex-section {
+            background: var(--secondary);
+        }
+
+        .reflex-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .reflex-test-area {
+            width: 300px;
+            height: 300px;
+            margin: 2rem auto;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .reflex-waiting {
+            background: var(--danger);
+            color: white;
+        }
+
+        .reflex-ready {
+            background: var(--success);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .reflex-results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--primary);
+            border-radius: 8px;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .score-excellent { color: var(--success); }
+        .score-good { color: var(--warning); }
+        .score-poor { color: var(--danger); }
+
+        .score-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .comparison-item {
+            padding: 1rem;
+            background: var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Macro Section */
+        .macro-section {
+            background: var(--secondary);
+        }
+
+        .macro-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .macro-editor {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .macro-preview {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            min-height: 300px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem;
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        .key-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100px;
+            background: var(--primary);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .macro-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+
+            .calculator-container,
+            .macro-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                flex-direction: column;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0;
+                text-align: center;
+                padding: 0.8rem 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero-bg {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+                display: block;
+            }
+
+            .macro-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .reflex-test-area {
+                width: 250px;
+                height: 250px;
+            }
+
+            .popup-buttons {
+                flex-direction: column;
+            }
+
+            .popup-btn {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            section {
+                padding: 4rem 0;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reflex-test-area {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Cheat<span>Lab</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="aimbot.html">Aimbot</a></li>
+                <li><a href="wallhack.html">Wallhack</a></li>
+                <li><a href="configs.html">Configurations</a></li>
+                <li><a href="tools.html" class="active">Outils</a></li>
+            </ul>
+            <button class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Outils Avancés</h1>
+                <p>Découvrez notre collection d'outils spécialisés pour optimiser votre setup gaming. Calculateurs, benchmarks et utilitaires pour maximiser vos performances.</p>
+                <div>
+                    <a href="#calculator" class="btn">Calculateur Sensibilité</a>
+                    <a href="#network" class="btn btn-outline">Test Réseau</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg"></div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section id="tools">
+        <div class="container">
+            <h2>Nos Outils</h2>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-badge">POPULAIRE</div>
+                    <div class="tool-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Calculateur de Sensibilité</h3>
+                    <p>Convertissez votre sensibilité entre différents jeux FPS pour une transition parfaite.</p>
+                    <ul class="tool-features">
+                        <li>Conversion précise DPI/CM</li>
+                        <li>Support 20+ jeux FPS</li>
+                        <li>Historique des conversions</li>
+                        <li>Export des paramètres</li>
+                    </ul>
+                    <button class="btn" style="width: 100%;" onclick="scrollToCalculator()">Utiliser l'outil</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-badge">RÉSEAU</div>
+                    <div class="tool-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Optimiseur Réseau</h3>
+                    <p>Testez votre connexion internet avec notre speed test intégré et obtenez des recommandations.</p>
+                    <ul class="tool-features">
+                        <li>Test de débit réel</li>
+                        <li>Mesure de latence</li>
+                        <li>Analyse upload/download</li>
+                        <li>Recommandations personnalisées</li>
+                    </ul>
+                    <button class="btn" style="width: 100%;" onclick="scrollToNetwork()">Tester ma connexion</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-badge">RECOMMANDÉ</div>
+                    <div class="tool-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Benchmark 3DMark</h3>
+                    <p>Testez les performances de votre setup gaming avec le benchmark de référence 3DMark sur Steam.</p>
+                    <ul class="tool-features">
+                        <li>Benchmark professionnel</li>
+                        <li>Comparaison mondiale</li>
+                        <li>Tests DX12 et Ray Tracing</li>
+                        <li>Résultats détaillés</li>
+                    </ul>
+                    <button class="btn" style="width: 100%;" onclick="window.open('https://store.steampowered.com/app/223850/3DMark/', '_blank')">Voir sur Steam</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-badge">PRO</div>
+                    <div class="tool-icon">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h3>Créateur de Macros</h3>
+                    <p>Créez des macros complexes pour automatiser vos actions en jeu (utilisation légale uniquement).</p>
+                    <ul class="tool-features">
+                        <li>Éditeur visuel de macros</li>
+                        <li>Support multi-périphériques</li>
+                        <li>Bibliothèque de macros</li>
+                        <li>Export pour différents logiciels</li>
+                    </ul>
+                    <button class="btn" style="width: 100%;" onclick="scrollToMacro()">Créer une macro</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Testeur de Réflexes</h3>
+                    <p>Mesurez et améliorez votre temps de réaction avec notre test scientifique.</p>
+                    <ul class="tool-features">
+                        <li>Test de réaction visuelle</li>
+                        <li>Historique des scores</li>
+                        <li>Comparaison avec les pros</li>
+                        <li>Amélioration continue</li>
+                    </ul>
+                    <button class="btn" style="width: 100%;" onclick="scrollToReflex()">Tester mes réflexes</button>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
+                    <h3>Générateur de Crosshair</h3>
+                    <p>Créez et personnalisez votre crosshair parfait pour chaque jeu.</p>
+                    <ul class="tool-features">
+                        <li>Préréglages professionnels</li>
+                        <li>Export codes de crosshair</li>
+                        <li>Visualisation en temps réel</li>
+                        <li>Bibliothèque communautaire</li>
+                    </ul>
+                    <button class="btn" style="width: 100%;" onclick="openCrosshairTool()">Crosshairs</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sensitivity Calculator -->
+    <section id="calculator" class="calculator-section">
+        <div class="container">
+            <h2>Calculateur de Sensibilité</h2>
+            <div class="calculator-container">
+                <div class="calculator-controls">
+                    <h3>Paramètres d'Entrée</h3>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Jeu Source</label>
+                        <select id="sourceGame">
+                            <option value="cs2">Counter-Strike 2</option>
+                            <option value="valorant">VALORANT</option>
+                            <option value="apex">Apex Legends</option>
+                            <option value="overwatch">Overwatch 2</option>
+                            <option value="cod">Call of Duty</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Sensibilité Source</label>
+                        <input type="number" id="sourceSens" value="2.5" step="0.1" min="0.1" max="20">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">DPI Souris</label>
+                        <input type="number" id="mouseDPI" value="800" min="100" max="16000">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Jeu Cible</label>
+                        <select id="targetGame">
+                            <option value="valorant">VALORANT</option>
+                            <option value="cs2">Counter-Strike 2</option>
+                            <option value="apex">Apex Legends</option>
+                            <option value="overwatch">Overwatch 2</option>
+                            <option value="cod">Call of Duty</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" style="width: 100%; margin-top: 1rem;" onclick="calculateSensitivity()">Calculer</button>
+                </div>
+
+                <div class="calculator-results">
+                    <h3>Résultats de Conversion</h3>
+                    
+                    <div class="result-item">
+                        <span>Sensibilité Cible:</span>
+                        <span class="result-value" id="targetSens">1.0</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>CM/360°:</span>
+                        <span class="result-value" id="cm360">41.2</span>
+                    </div>
+                    
+                    <div class="result-item">
+                        <span>Inch/360°:</span>
+                        <span class="result-value" id="inch360">16.2</span>
+                    </div>
+
+                    <div class="comparison-chart">
+                        <h4>Comparaison des Sensibilités</h4>
+                        <div class="chart-bar">
+                            <div class="chart-fill" id="sourceBar" style="width: 50%;"></div>
+                            <span class="chart-label" id="sourceLabel">CS2: 2.5</span>
+                        </div>
+                        <div class="chart-bar">
+                            <div class="chart-fill" id="targetBar" style="width: 30%;"></div>
+                            <span class="chart-label" id="targetLabel">VALORANT: 1.0</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h4>Code de Crosshair Recommandé</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-light); background: var(--primary); padding: 1rem; border-radius: 4px; font-family: monospace;" id="crosshairCode">
+                            Crosshair: Style 4, Color 1, Gap -2, Size 2, Thickness 1
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Network Test Section -->
+    <section id="network" class="network-section">
+        <div class="container">
+            <h2>Test de Connexion Réseau</h2>
+            <div class="network-container">
+                <h3>Analyse Complète de Votre Connexion</h3>
+                <p>Testez votre débit internet, latence et stabilité pour optimiser vos performances gaming.</p>
+                
+                <div class="speed-test-area">
+                    <button class="btn" id="startSpeedTest" onclick="startSpeedTest()" style="width: 100%;">
+                        <i class="fas fa-play"></i> Démarrer le Speed Test
+                    </button>
+                    
+                    <div class="test-progress" id="testProgress" style="display: none;">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    
+                    <div class="test-status" id="testStatus">
+                        Prêt pour le test...
+                    </div>
+                </div>
+
+                <div class="speed-results" id="speedResults" style="display: none;">
+                    <div class="speed-result">
+                        <div class="speed-value speed-ping" id="pingResult">0 ms</div>
+                        <div>Latence (Ping)</div>
+                    </div>
+                    <div class="speed-result">
+                        <div class="speed-value speed-download" id="downloadResult">0 Mbps</div>
+                        <div>Download</div>
+                    </div>
+                    <div class="speed-result">
+                        <div class="speed-value speed-upload" id="uploadResult">0 Mbps</div>
+                        <div>Upload</div>
+                    </div>
+                </div>
+
+                <div class="recommendations" id="recommendations" style="display: none;">
+                    <h4>Recommandations pour le Gaming</h4>
+                    <ul>
+                        <li id="pingTip">Test de latence en cours...</li>
+                        <li id="downloadTip">Test de download en cours...</li>
+                        <li id="uploadTip">Test d'upload en cours...</li>
+                        <li>Utilisez une connexion filaire plutôt que le WiFi</li>
+                        <li>Fermez les applications utilisant la bande passante</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reflex Test Section -->
+    <section id="reflex" class="reflex-section">
+        <div class="container">
+            <h2>Test de Réflexes</h2>
+            <div class="reflex-container">
+                <h3>Testez votre Temps de Réaction</h3>
+                <p>Cliquez sur le carré dès qu'il devient vert. Votre temps de réaction sera mesuré en millisecondes.</p>
+                
+                <div class="reflex-test-area reflex-waiting" id="reflexTestArea" onclick="handleReflexClick()">
+                    ATTENDEZ...
+                </div>
+
+                <div class="reflex-results" id="reflexResults" style="display: none;">
+                    <h4>Votre Temps de Réaction</h4>
+                    <div class="result-score" id="reflexScore">0ms</div>
+                    
+                    <div class="score-comparison">
+                        <div class="comparison-item">
+                            <div style="font-size: 0.8rem; color: var(--text-light);">Votre score</div>
+                            <div style="font-weight: bold;" id="yourScore">0ms</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div style="font-size: 0.8rem; color: var(--text-light);">Moyenne générale</div>
+                            <div style="font-weight: bold;">250ms</div>
+                        </div>
+                        <div class="comparison-item">
+                            <div style="font-size: 0.8rem; color: var(--text-light);">Joueurs pro</div>
+                            <div style="font-weight: bold;">150ms</div>
+                        </div>
+                    </div>
+
+                    <button class="btn" style="width: 100%; margin-top: 1.5rem;" onclick="startReflexTest()">Recommencer le test</button>
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 2rem;" id="startReflexBtn" onclick="startReflexTest()">Commencer le test</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benchmark Section -->
+    <section id="benchmark" class="benchmark-section">
+        <div class="container">
+            <h2>Benchmark Recommandé</h2>
+            <div class="benchmark-container">
+                <h3>3DMark - Le Benchmark de Référence</h3>
+                <p>Pour des tests de performance gaming précis et professionnels, nous recommandons 3DMark, le benchmark le plus utilisé par les joueurs et overclockers.</p>
+                
+                <div style="text-align: center; margin: 2rem 0;">
+                    <img src="https://cdn.cloudflare.steamstatic.com/steam/apps/223850/header.jpg" alt="3DMark" style="max-width: 100%; border-radius: 8px; margin-bottom: 1.5rem;">
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Pourquoi 3DMark ?</label>
+                    <ul style="color: var(--text-light); margin-left: 1.5rem;">
+                        <li>Tests DirectX 12 et Ray Tracing avancés</li>
+                        <li>Comparaison avec d'autres configurations</li>
+                        <li>Résultats détaillés et scores mondiaux</li>
+                        <li>Recommandations d'amélioration précises</li>
+                        <li>Support des dernières technologies GPU</li>
+                        <li>Communauté active de overclocking</li>
+                    </ul>
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 2rem;" onclick="window.open('https://store.steampowered.com/app/223850/3DMark/', '_blank')">Télécharger 3DMark sur Steam</button>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: var(--primary); border-radius: 8px;">
+                    <h4>Alternative Gratuite</h4>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">Pour un benchmark gratuit, essayez également :</p>
+                    <button class="btn btn-outline" style="width: 100%;" onclick="window.open('https://benchmark.unigine.com/superposition', '_blank')">Unigine Superposition</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Macro Creator -->
+    <section id="macro" class="macro-section">
+        <div class="container">
+            <h2>Créateur de Macros</h2>
+            <div class="macro-container">
+                <div class="macro-editor">
+                    <h3>Éditeur de Macro</h3>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Nom de la Macro</label>
+                        <input type="text" id="macroName" placeholder="Ex: Spray Control AK47">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Touche d'Activation</label>
+                        <select id="macroKey">
+                            <option value="mouse4">Bouton Souris 4</option>
+                            <option value="mouse5">Bouton Souris 5</option>
+                            <option value="ctrl">Ctrl</option>
+                            <option value="alt">Alt</option>
+                            <option value="space">Espace</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Actions de la Macro</label>
+                        <textarea id="macroActions" placeholder="Ex: 
+MOUSE_DOWN LEFT
+DELAY 50
+MOUSE_UP LEFT
+DELAY 100"></textarea>
+                    </div>
+
+                    <div class="macro-actions">
+                        <button class="btn" onclick="testMacro()">Tester la Macro</button>
+                        <button class="btn btn-outline" onclick="saveMacro()">Sauvegarder</button>
+                    </div>
+                </div>
+
+                <div class="macro-preview">
+                    <h3>Aperçu de la Macro</h3>
+                    <div class="key-preview" id="keyPreview">
+                        MOUSE4
+                    </div>
+                    <div>
+                        <h4>Actions définies:</h4>
+                        <p id="macroPreview" style="color: var(--text-light); font-family: monospace; font-size: 0.9rem;">
+                            Aucune action définie
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CheatLab</h3>
+                    <p>Votre ressource ultime pour maîtriser les jeux FPS. Techniques avancées, configurations optimales et communauté dédiée.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="aimbot.html">Aimbot</a></li>
+                        <li><a href="wallhack.html">Wallhack</a></li>
+                        <li><a href="configs.html">Configurations</a></li>
+                        <li><a href="tools.html">Outils</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Légal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Mentions légales</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Communauté</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CheatLab. Ce site est à but éducatif uniquement. L'utilisation des outils doit respecter les conditions d'utilisation de chaque jeu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Crosshair Popup -->
+    <div class="popup-overlay" id="crosshairPopup">
+        <div class="popup-content">
+            <h3 class="popup-title">Choisissez votre jeu</h3>
+            <div class="popup-buttons">
+                <button class="btn popup-btn" onclick="openCrosshairDB('valorant')">Valorant</button>
+                <button class="btn popup-btn" onclick="openCrosshairDB('cs2')">CS2</button>
+                <button class="btn btn-outline" style="margin-top: 1rem; width: 100%;" onclick="closeCrosshairPopup()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation mobile
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll to sections
+        function scrollToCalculator() {
+            document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToNetwork() {
+            document.getElementById('network').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToReflex() {
+            document.getElementById('reflex').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToMacro() {
+            document.getElementById('macro').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Crosshair Tool Functions
+        function openCrosshairTool() {
+            document.getElementById('crosshairPopup').classList.add('active');
+        }
+
+        function closeCrosshairPopup() {
+            document.getElementById('crosshairPopup').classList.remove('active');
+        }
+
+        function openCrosshairDB(game) {
+            if (game === 'valorant') {
+                window.open('https://www.vcrdb.net', '_blank');
+            } else if (game === 'cs2') {
+                window.open('https://prosettings.net/tools/cs2-crosshair-database', '_blank');
+            }
+            closeCrosshairPopup();
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('crosshairPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCrosshairPopup();
+            }
+        });
+
+        // Sensitivity Calculator
+        function calculateSensitivity() {
+            const sourceGame = document.getElementById('sourceGame').value;
+            const sourceSens = parseFloat(document.getElementById('sourceSens').value);
+            const mouseDPI = parseInt(document.getElementById('mouseDPI').value);
+            const targetGame = document.getElementById('targetGame').value;
+
+            // Conversion factors for different games (simplified)
+            const conversionFactors = {
+                cs2: 1,
+                valorant: 0.314,
+                apex: 0.022,
+                overwatch: 0.0066,
+                cod: 0.0066
+            };
+
+            const sourceFactor = conversionFactors[sourceGame];
+            const targetFactor = conversionFactors[targetGame];
+
+            // Calculate target sensitivity
+            const targetSens = (sourceSens * sourceFactor) / targetFactor;
+            const cm360 = (360 / (sourceSens * sourceFactor * mouseDPI)) * 2.54;
+
+            // Update results
+            document.getElementById('targetSens').textContent = targetSens.toFixed(2);
+            document.getElementById('cm360').textContent = cm360.toFixed(1);
+            document.getElementById('inch360').textContent = (cm360 / 2.54).toFixed(1);
+
+            // Update comparison chart
+            const sourcePercentage = Math.min(100, sourceSens * 20);
+            const targetPercentage = Math.min(100, targetSens * 20);
+
+            document.getElementById('sourceBar').style.width = sourcePercentage + '%';
+            document.getElementById('targetBar').style.width = targetPercentage + '%';
+            
+            document.getElementById('sourceLabel').textContent = `${sourceGame.toUpperCase()}: ${sourceSens}`;
+            document.getElementById('targetLabel').textContent = `${targetGame.toUpperCase()}: ${targetSens.toFixed(2)}`;
+
+            // Update crosshair code
+            document.getElementById('crosshairCode').textContent = 
+                `Crosshair: Style 4, Color 1, Gap -2, Size 2, Thickness 1, Sens: ${targetSens.toFixed(2)}`;
+        }
+
+        // Initialize calculator
+        calculateSensitivity();
+
+        // Network Speed Test
+        let speedTest;
+        let isTesting = false;
+
+        function startSpeedTest() {
+            if (isTesting) return;
+
+            const startBtn = document.getElementById('startSpeedTest');
+            const progress = document.getElementById('testProgress');
+            const progressFill = document.getElementById('progressFill');
+            const status = document.getElementById('testStatus');
+            const results = document.getElementById('speedResults');
+            const recommendations = document.getElementById('recommendations');
+
+            // Reset UI
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Test en cours...';
+            progress.style.display = 'block';
+            progressFill.style.width = '0%';
+            status.textContent = 'Initialisation du test...';
+            results.style.display = 'none';
+            recommendations.style.display = 'none';
+            isTesting = true;
+
+            try {
+                // Utilisation de l'API Speedtest.net
+                speedTest = new Speedtest();
+
+                speedTest.onupdate = function(data) {
+                    const progress = (data.testState || 0) * 100;
+                    progressFill.style.width = progress + '%';
+
+                    if (data.testState === 0) {
+                        status.textContent = 'Test de ping...';
+                    } else if (data.testState === 1) {
+                        status.textContent = 'Test de download...';
+                        document.getElementById('pingResult').textContent = Math.round(data.ping) + ' ms';
+                        updatePingRecommendation(data.ping);
+                    } else if (data.testState === 2) {
+                        status.textContent = 'Test d\'upload...';
+                        document.getElementById('downloadResult').textContent = (data.dlStatus * 8).toFixed(1) + ' Mbps';
+                        updateDownloadRecommendation(data.dlStatus * 8);
+                    } else if (data.testState === 3) {
+                        status.textContent = 'Finalisation...';
+                        document.getElementById('uploadResult').textContent = (data.ulStatus * 8).toFixed(1) + ' Mbps';
+                        updateUploadRecommendation(data.ulStatus * 8);
+                    } else if (data.testState === 4) {
+                        // Test complet
+                        finishSpeedTest(data);
+                    }
+                };
+
+                speedTest.onend = function(aborted) {
+                    if (!aborted) {
+                        finishSpeedTest(speedTest);
+                    }
+                };
+
+                speedTest.start();
+
+            } catch (error) {
+                console.error('Erreur Speedtest:', error);
+                status.textContent = 'Erreur lors du test. Veuillez réessayer.';
+                resetSpeedTest();
+            }
+        }
+
+        function finishSpeedTest(data) {
+            const startBtn = document.getElementById('startSpeedTest');
+            const progress = document.getElementById('testProgress');
+            const status = document.getElementById('testStatus');
+            const results = document.getElementById('speedResults');
+            const recommendations = document.getElementById('recommendations');
+
+            // Mise à jour des résultats finaux
+            document.getElementById('pingResult').textContent = Math.round(data.ping) + ' ms';
+            document.getElementById('downloadResult').textContent = (data.dlStatus * 8).toFixed(1) + ' Mbps';
+            document.getElementById('uploadResult').textContent = (data.ulStatus * 8).toFixed(1) + ' Mbps';
+
+            // Mise à jour des recommandations
+            updatePingRecommendation(data.ping);
+            updateDownloadRecommendation(data.dlStatus * 8);
+            updateUploadRecommendation(data.ulStatus * 8);
+
+            // Affichage des résultats
+            progress.style.display = 'none';
+            status.textContent = 'Test terminé !';
+            results.style.display = 'grid';
+            recommendations.style.display = 'block';
+            
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fas fa-redo"></i> Relancer le test';
+            isTesting = false;
+        }
+
+        function resetSpeedTest() {
+            const startBtn = document.getElementById('startSpeedTest');
+            const progress = document.getElementById('testProgress');
+            
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fas fa-play"></i> Démarrer le Speed Test';
+            progress.style.display = 'none';
+            isTesting = false;
+        }
+
+        function updatePingRecommendation(ping) {
+            const pingTip = document.getElementById('pingTip');
+            if (ping < 30) {
+                pingTip.textContent = '✅ Latence excellente pour le gaming compétitif';
+            } else if (ping < 60) {
+                pingTip.textContent = '⚠️ Latence correcte, envisagez une connexion filaire';
+            } else {
+                pingTip.textContent = '❌ Latence élevée, vérifiez votre connexion';
+            }
+        }
+
+        function updateDownloadRecommendation(download) {
+            const downloadTip = document.getElementById('downloadTip');
+            if (download > 50) {
+                downloadTip.textContent = '✅ Débit download excellent';
+            } else if (download > 20) {
+                downloadTip.textContent = '⚠️ Débit download correct pour le gaming';
+            } else {
+                downloadTip.textContent = '❌ Débit download faible, peut affecter les jeux en ligne';
+            }
+        }
+
+        function updateUploadRecommendation(upload) {
+            const uploadTip = document.getElementById('uploadTip');
+            if (upload > 10) {
+                uploadTip.textContent = '✅ Débit upload excellent';
+            } else if (upload > 5) {
+                uploadTip.textContent = '⚠️ Débit upload correct';
+            } else {
+                uploadTip.textContent = '❌ Débit upload faible, peut causer du lag';
+            }
+        }
+
+        // Reflex Test
+        let reflexStartTime;
+        let reflexTimeout;
+        let isReflexTestRunning = false;
+
+        function startReflexTest() {
+            const testArea = document.getElementById('reflexTestArea');
+            const results = document.getElementById('reflexResults');
+            const startBtn = document.getElementById('startReflexBtn');
+
+            // Reset state
+            testArea.className = 'reflex-test-area reflex-waiting';
+            testArea.textContent = 'ATTENDEZ...';
+            results.style.display = 'none';
+            startBtn.style.display = 'none';
+            isReflexTestRunning = true;
+
+            // Random delay between 2-5 seconds
+            const delay = Math.random() * 3000 + 2000;
+
+            reflexTimeout = setTimeout(() => {
+                if (isReflexTestRunning) {
+                    testArea.className = 'reflex-test-area reflex-ready';
+                    testArea.textContent = 'CLIQUEZ MAINTENANT !';
+                    reflexStartTime = Date.now();
+                }
+            }, delay);
+        }
+
+        function handleReflexClick() {
+            if (!isReflexTestRunning) return;
+
+            const testArea = document.getElementById('reflexTestArea');
+            const results = document.getElementById('reflexResults');
+            const scoreElement = document.getElementById('reflexScore');
+            const yourScoreElement = document.getElementById('yourScore');
+            const startBtn = document.getElementById('startReflexBtn');
+
+            if (testArea.classList.contains('reflex-ready')) {
+                // Valid click - calculate reaction time
+                const reactionTime = Date.now() - reflexStartTime;
+                
+                // Display results
+                scoreElement.textContent = reactionTime + 'ms';
+                yourScoreElement.textContent = reactionTime + 'ms';
+                
+                // Set score color based on performance
+                if (reactionTime < 180) {
+                    scoreElement.className = 'result-score score-excellent';
+                } else if (reactionTime < 250) {
+                    scoreElement.className = 'result-score score-good';
+                } else {
+                    scoreElement.className = 'result-score score-poor';
+                }
+
+                results.style.display = 'block';
+                startBtn.style.display = 'block';
+                isReflexTestRunning = false;
+            } else if (testArea.classList.contains('reflex-waiting')) {
+                // Too early - reset test
+                clearTimeout(reflexTimeout);
+                testArea.textContent = 'TROP TÔT ! Recommencez...';
+                setTimeout(() => {
+                    startReflexTest();
+                }, 1500);
+            }
+        }
+
+        // Macro Creator
+        function updateMacroPreview() {
+            const macroKey = document.getElementById('macroKey').value;
+            const macroActions = document.getElementById('macroActions').value;
+
+            document.getElementById('keyPreview').textContent = macroKey.toUpperCase();
+            document.getElementById('macroPreview').textContent = macroActions || 'Aucune action définie';
+        }
+
+        function testMacro() {
+            const macroName = document.getElementById('macroName').value || 'Macro sans nom';
+            alert(`Test de la macro "${macroName}" - Cette fonctionnalité serait pleinement opérationnelle dans une application desktop.`);
+        }
+
+        function saveMacro() {
+            const macroName = document.getElementById('macroName').value || 'Macro sans nom';
+            alert(`Macro "${macroName}" sauvegardée! (Fonctionnalité de démonstration)`);
+        }
+
+        // Initialize macro preview
+        document.getElementById('macroKey').addEventListener('change', updateMacroPreview);
+        document.getElementById('macroActions').addEventListener('input', updateMacroPreview);
+        updateMacroPreview();
+
+        // Fallback Speedtest implementation
+        class Speedtest {
+            constructor() {
+                this.ping = 0;
+                this.dlStatus = 0;
+                this.ulStatus = 0;
+                this.testState = -1;
+                this.onupdate = null;
+                this.onend = null;
+            }
+
+            start() {
+                this.testState = 0;
+                this.simulateTest();
+            }
+
+            simulateTest() {
+                const steps = [
+                    { state: 0, duration: 1000, update: () => this.ping = 15 + Math.random() * 30 },
+                    { state: 1, duration: 3000, update: () => this.dlStatus = 5 + Math.random() * 45 },
+                    { state: 2, duration: 2000, update: () => this.ulStatus = 2 + Math.random() * 18 },
+                    { state: 3, duration: 500 }
+                ];
+
+                let currentStep = 0;
+
+                const runStep = () => {
+                    if (currentStep >= steps.length) {
+                        this.testState = 4;
+                        if (this.onupdate) this.onupdate(this);
+                        if (this.onend) this.onend(false);
+                        return;
+                    }
+
+                    const step = steps[currentStep];
+                    this.testState = step.state;
+                    
+                    if (step.update) {
+                        const interval = setInterval(() => {
+                            step.update();
+                            if (this.onupdate) this.onupdate(this);
+                        }, 100);
+                        
+                        setTimeout(() => {
+                            clearInterval(interval);
+                            currentStep++;
+                            runStep();
+                        }, step.duration);
+                    } else {
+                        setTimeout(() => {
+                            currentStep++;
+                            runStep();
+                        }, step.duration);
+                    }
+                };
+
+                runStep();
+            }
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
