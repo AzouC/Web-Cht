@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallhack - CheatLab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables et reset */
+        :root {
+            --primary: #0a0a0a;
+            --secondary: #111111;
+            --accent: #6c63ff;
+            --accent-light: #8a85ff;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border: #2a2a2a;
+            --card-bg: rgba(30, 30, 30, 0.6);
+            --success: #00d26a;
+            --warning: #ff9a3d;
+            --danger: #ff4757;
+            --enemy: #ff6b6b;
+            --teammate: #4ecdc4;
+            --item: #ffe66d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typographie */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        /* Layout */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 0;
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-light);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background: rgba(108, 99, 255, 0.1);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent) 0%, transparent 70%);
+            opacity: 0.1;
+            z-index: 1;
+        }
+
+        /* Demo Section */
+        .demo-section {
+            background: var(--secondary);
+        }
+
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .demo-visual {
+            position: relative;
+            height: 500px;
+            background: var(--primary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .demo-controls {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background: var(--text);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--accent);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input {
+            margin-right: 0.5rem;
+        }
+
+        /* Types Grid */
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .type-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2.5rem;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            backdrop-filter: blur(10px);
+        }
+
+        .type-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .type-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Comparison Section */
+        .comparison {
+            background: var(--secondary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .comparison-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .comparison-visual {
+            height: 200px;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        /* Detection Section */
+        .detection-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Wallhack Animation */
+        .wallhack-demo {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+        }
+
+        .wall {
+            position: absolute;
+            background: #333;
+            border: 1px solid #444;
+        }
+
+        .player {
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.7rem;
+            z-index: 2;
+        }
+
+        .player.enemy {
+            background: var(--enemy);
+            border: 2px solid #ff4757;
+        }
+
+        .player.teammate {
+            background: var(--teammate);
+            border: 2px solid #00d2d3;
+        }
+
+        .item {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--item);
+            border-radius: 50%;
+            border: 2px solid #ff9ff3;
+            z-index: 2;
+        }
+
+        .esp-box {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .esp-line {
+            position: absolute;
+            background: var(--accent);
+            height: 2px;
+            transform-origin: 0 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .health-bar {
+            position: absolute;
+            height: 4px;
+            background: var(--success);
+            top: -8px;
+            left: 0;
+            border-radius: 2px;
+            z-index: 3;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .player-movement {
+            animation: playerMove 8s infinite linear;
+        }
+
+        .item-glow {
+            animation: itemGlow 2s infinite;
+        }
+
+        @keyframes playerMove {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(50px, -30px); }
+            50% { transform: translate(100px, 0); }
+            75% { transform: translate(50px, 30px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes itemGlow {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 10px var(--item); 
+            }
+            50% { 
+                transform: scale(1.1); 
+                box-shadow: 0 0 20px var(--item); 
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+
+            .demo-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                flex-direction: column;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0;
+                text-align: center;
+                padding: 0.8rem 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero-bg {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+                display: block;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            section {
+                padding: 4rem 0;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">Cheat<span>Lab</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="aimbot.html">Aimbot</a></li>
+                <li><a href="wallhack.html" class="active">Wallhack</a></li>
+                <li><a href="configs.html">Configurations</a></li>
+                <li><a href="tools.html">Outils</a></li>
+            </ul>
+            <button class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Vision à Travers les Murs</h1>
+                <p>Le wallhack vous donne un avantage tactique en révélant la position des ennemis, des objets et des informations cruciales à travers les obstacles. Maîtrisez l'art de la vision ESP.</p>
+                <div>
+                    <a href="#demo" class="btn">Voir la Démo</a>
+                    <a href="#types" class="btn btn-outline">Types d'ESP</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-bg"></div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2>Démonstration Interactive</h2>
+            <div class="demo-container">
+                <div class="demo-visual">
+                    <div class="wallhack-demo" id="wallhackDemo">
+                        <!-- Les éléments seront générés par JavaScript -->
+                    </div>
+                    <div class="info-panel" id="infoPanel">
+                        <div><strong>Joueurs visibles:</strong> <span id="visiblePlayers">0</span></div>
+                        <div><strong>Objets détectés:</strong> <span id="visibleItems">0</span></div>
+                        <div><strong>Distance max:</strong> <span id="maxDistance">50m</span></div>
+                    </div>
+                </div>
+                <div class="demo-controls">
+                    <h3>Paramètres ESP</h3>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Distance de détection</label>
+                        <input type="range" min="10" max="100" value="50" class="slider" id="espDistance">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">Opacité ESP</label>
+                        <input type="range" min="10" max="100" value="70" class="slider" id="espOpacity">
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Activation ESP</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="espToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <h4 style="margin: 1.5rem 0 1rem 0;">Éléments à afficher:</h4>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showEnemies" checked>
+                        <label class="control-label">Ennemis</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showTeammates" checked>
+                        <label class="control-label">Coéquipiers</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showItems" checked>
+                        <label class="control-label">Objets</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="showHealth" checked>
+                        <label class="control-label">Barres de vie</label>
+                    </div>
+
+                    <button class="btn" id="resetDemo" style="margin-top: 1rem;">Réinitialiser</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Types Section -->
+    <section id="types">
+        <div class="container">
+            <h2>Types d'ESP et Wallhack</h2>
+            <div class="types-grid">
+                <div class="type-card">
+                    <div class="type-badge">Box ESP</div>
+                    <div class="type-icon">
+                        <i class="fas fa-square"></i>
+                    </div>
+                    <h3>ESP Boîtes</h3>
+                    <p>Affiche des boîtes autour des joueurs avec différentes couleurs selon l'équipe. Le format classique le plus répandu.</p>
+                    <ul style="color: var(--text-light); margin-top: 1rem;">
+                        <li>Visibilité: Excellente</li>
+                        <li>Détection: Moyenne</li>
+                        <li>Utilisation: Tous niveaux</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <div class="type-badge">Squelette</div>
+                    <div class="type-icon">
+                        <i class="fas fa-bone"></i>
+                    </div>
+                    <h3>ESP Squelette</h3>
+                    <p>Montre le squelette des joueurs à travers les murs. Idéal pour viser les points vitaux spécifiques.</p>
+                    <ul style="color: var(--text-light); margin-top: 1rem;">
+                        <li>Précision: Maximale</li>
+                        <li>Détection: Élevée</li>
+                        <li>Utilisation: Expert</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <div class="type-badge">Radar</div>
+                    <div class="type-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3>Radar Hack</h3>
+                    <p>Affiche tous les joueurs sur le radar du jeu, même ceux normalement cachés. Très discret.</p>
+                    <ul style="color: var(--text-light); margin-top: 1rem;">
+                        <li>Discrétion: Maximale</li>
+                        <li>Information: Limitée</li>
+                        <li>Utilisation: Compétitive</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section class="comparison">
+        <div class="container">
+            <h2>Avec vs Sans Wallhack</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="comparison-visual" style="display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center;">
+                            <i class="fas fa-eye-slash" style="font-size: 4rem; color: var(--danger);"></i>
+                            <p style="margin-top: 1rem;">Vision Normale</p>
+                        </div>
+                    </div>
+                    <h3>Sans Wallhack</h3>
+                    <ul style="text-align: left; color: var(--text-light);">
+                        <li>Surprise: Élevée</li>
+                        <li>Information: Limitée</li>
+                        <li>Positionnement: Guesswork</li>
+                        <li>Avantage: Aucun</li>
+                    </ul>
+                </div>
+                <div class="comparison-card">
+                    <div class="comparison-visual" style="display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center;">
+                            <i class="fas fa-eye" style="font-size: 4rem; color: var(--success);"></i>
+                            <p style="margin-top: 1rem;">Vision ESP</p>
+                        </div>
+                    </div>
+                    <h3>Avec Wallhack</h3>
+                    <ul style="text-align: left; color: var(--text-light);">
+                        <li>Surprise: Nulle</li>
+                        <li>Information: Complète</li>
+                        <li>Positionnement: Précis</li>
+                        <li>Avantage: Maximum</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section id="info">
+        <div class="container">
+            <h2>Informations Disponibles</h2>
+            <div class="detection-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Position des Joueurs</h3>
+                    <p>Localisation exacte de tous les joueurs sur la carte, même à travers les obstacles.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Santé et Armure</h3>
+                    <p>Barres de vie et pourcentage d'armure visibles en temps réel.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Armes et Équipement</h3>
+                    <p>Détection des armes portées et des équipements spéciaux.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Objets Importants</h3>
+                    <p>Localisation des objets rares, bombes, et objectifs de mission.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detection Section -->
+    <section id="detection" class="demo-section">
+        <div class="container">
+            <h2>Détection et Contre-Mesures</h2>
+            <div class="types-grid">
+                <div class="type-card">
+                    <h3>Méthodes de Détection</h3>
+                    <ul style="color: var(--text-light); margin-top: 1rem;">
+                        <li>Scan mémoire des processus ESP</li>
+                        <li>Analyse des appels DirectX/OpenGL</li>
+                        <li>Détection des overlays suspects</li>
+                        <li>Surveillance des modifications de textures</li>
+                    </ul>
+                </div>
+                <div class="type-card">
+                    <h3>Techniques de Camouflage</h3>
+                    <ul style="color: var(--text-light); margin-top: 1rem;">
+                        <li>ESP basé sur le radar (moins détectable)</li>
+                        <li>Activation/désactivation rapide</li>
+                        <li>Utilisation de couleurs similaires au jeu</li>
+                        <li>ESP à distance limitée</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <div class="btn" style="background: var(--warning);">Risque de Bannissement: Moyen</div>
+                <p style="margin-top: 1rem; color: var(--text-light);">Les wallhacks modernes sont bien détectés par les anti-cheats avancés</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CheatLab</h3>
+                    <p>Votre ressource ultime pour maîtriser les jeux FPS. Techniques avancées, configurations optimales et communauté dédiée.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Accueil</a></li>
+                        <li><a href="aimbot.html">Aimbot</a></li>
+                        <li><a href="wallhack.html">Wallhack</a></li>
+                        <li><a href="configs.html">Configurations</a></li>
+                        <li><a href="tools.html">Outils</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Légal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Mentions légales</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Communauté</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">YouTube</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 CheatLab. Ce site est à but éducatif uniquement. L'utilisation de cheats dans les jeux en ligne peut être contraire aux conditions d'utilisation.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation mobile
+        const mobileToggle = document.querySelector('.mobile-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Wallhack Demo
+        const wallhackDemo = document.getElementById('wallhackDemo');
+        const espToggle = document.getElementById('espToggle');
+        const espDistance = document.getElementById('espDistance');
+        const espOpacity = document.getElementById('espOpacity');
+        const showEnemies = document.getElementById('showEnemies');
+        const showTeammates = document.getElementById('showTeammates');
+        const showItems = document.getElementById('showItems');
+        const showHealth = document.getElementById('showHealth');
+        const resetBtn = document.getElementById('resetDemo');
+
+        let walls = [];
+        let players = [];
+        let items = [];
+        let espBoxes = [];
+        let espLines = [];
+        let isEspActive = true;
+
+        function initDemo() {
+            createWalls();
+            createPlayers();
+            createItems();
+            updateESP();
+        }
+
+        function createWalls() {
+            // Create maze-like walls
+            const wallPositions = [
+                { left: 50, top: 50, width: 200, height: 15 },
+                { left: 50, top: 50, width: 15, height: 150 },
+                { left: 235, top: 50, width: 15, height: 100 },
+                { left: 150, top: 150, width: 100, height: 15 },
+                { left: 150, top: 150, width: 15, height: 100 },
+                { left: 350, top: 80, width: 120, height: 15 },
+                { left: 350, top: 80, width: 15, height: 100 },
+                { left: 430, top: 165, width: 80, height: 15 }
+            ];
+
+            wallPositions.forEach(pos => {
+                const wall = document.createElement('div');
+                wall.className = 'wall';
+                wall.style.left = `${pos.left}px`;
+                wall.style.top = `${pos.top}px`;
+                wall.style.width = `${pos.width}px`;
+                wall.style.height = `${pos.height}px`;
+                wallhackDemo.appendChild(wall);
+                walls.push(wall);
+            });
+        }
+
+        function createPlayers() {
+            // Create enemy players
+            const enemyPositions = [
+                { left: 300, top: 100, health: 100, name: 'ENEMY1' },
+                { left: 400, top: 200, health: 75, name: 'ENEMY2' },
+                { left: 200, top: 280, health: 50, name: 'ENEMY3' }
+            ];
+
+            // Create teammate players
+            const teammatePositions = [
+                { left: 100, top: 220, health: 100, name: 'TEAM1' },
+                { left: 450, top: 100, health: 100, name: 'TEAM2' }
+            ];
+
+            enemyPositions.forEach((pos, index) => {
+                const player = document.createElement('div');
+                player.className = 'player enemy player-movement';
+                player.style.left = `${pos.left}px`;
+                player.style.top = `${pos.top}px`;
+                player.textContent = pos.name;
+                player.dataset.health = pos.health;
+                player.dataset.index = index;
+                
+                // Different animation delays for each player
+                player.style.animationDelay = `${index * 2}s`;
+                
+                wallhackDemo.appendChild(player);
+                players.push(player);
+            });
+
+            teammatePositions.forEach((pos, index) => {
+                const player = document.createElement('div');
+                player.className = 'player teammate player-movement';
+                player.style.left = `${pos.left}px`;
+                player.style.top = `${pos.top}px`;
+                player.textContent = pos.name;
+                player.dataset.health = pos.health;
+                player.dataset.index = index + 3;
+                
+                // Different animation for teammates
+                player.style.animationDuration = '10s';
+                player.style.animationDelay = `${index * 1.5}s`;
+                
+                wallhackDemo.appendChild(player);
+                players.push(player);
+            });
+        }
+
+        function createItems() {
+            const itemPositions = [
+                { left: 180, top: 180, type: 'weapon' },
+                { left: 320, top: 120, type: 'health' },
+                { left: 220, top: 320, type: 'ammo' },
+                { left: 380, top: 250, type: 'armor' }
+            ];
+
+            itemPositions.forEach(pos => {
+                const item = document.createElement('div');
+                item.className = 'item item-glow';
+                item.style.left = `${pos.left}px`;
+                item.style.top = `${pos.top}px`;
+                item.dataset.type = pos.type;
+                wallhackDemo.appendChild(item);
+                items.push(item);
+            });
+        }
+
+        function updateESP() {
+            // Clear existing ESP elements
+            espBoxes.forEach(box => box.remove());
+            espLines.forEach(line => line.remove());
+            espBoxes = [];
+            espLines = [];
+
+            if (!isEspActive) return;
+
+            const opacity = parseInt(espOpacity.value) / 100;
+            const distance = parseInt(espDistance.value);
+            const showE = showEnemies.checked;
+            const showT = showTeammates.checked;
+            const showI = showItems.checked;
+            const showH = showHealth.checked;
+
+            let visiblePlayers = 0;
+            let visibleItems = 0;
+
+            // Create ESP for players
+            players.forEach(player => {
+                const isEnemy = player.classList.contains('enemy');
+                const isTeammate = player.classList.contains('teammate');
+                
+                if ((isEnemy && !showE) || (isTeammate && !showT)) return;
+
+                visiblePlayers++;
+
+                // Get current player position (accounting for animation)
+                const rect = player.getBoundingClientRect();
+                const demoRect = wallhackDemo.getBoundingClientRect();
+                
+                const playerX = rect.left - demoRect.left;
+                const playerY = rect.top - demoRect.top;
+
+                // ESP Box
+                const espBox = document.createElement('div');
+                espBox.className = 'esp-box';
+                espBox.style.left = `${playerX - 5}px`;
+                espBox.style.top = `${playerY - 5}px`;
+                espBox.style.width = `${rect.width + 10}px`;
+                espBox.style.height = `${rect.height + 10}px`;
+                espBox.style.borderColor = isEnemy ? 'var(--enemy)' : 'var(--teammate)';
+                espBox.style.opacity = opacity;
+                
+                wallhackDemo.appendChild(espBox);
+                espBoxes.push(espBox);
+
+                // Health bar
+                if (showH) {
+                    const health = parseInt(player.dataset.health);
+                    const healthBar = document.createElement('div');
+                    healthBar.className = 'health-bar';
+                    healthBar.style.width = `${health}%`;
+                    healthBar.style.background = health > 50 ? 'var(--success)' : health > 25 ? 'var(--warning)' : 'var(--danger)';
+                    espBox.appendChild(healthBar);
+                }
+
+                // Line from center to player
+                const espLine = document.createElement('div');
+                espLine.className = 'esp-line';
+                
+                const centerX = demoRect.width / 2;
+                const centerY = demoRect.height / 2;
+                const playerCenterX = playerX + rect.width / 2;
+                const playerCenterY = playerY + rect.height / 2;
+                
+                const angle = Math.atan2(playerCenterY - centerY, playerCenterX - centerX);
+                const length = Math.min(300, distance * 6);
+                
+                espLine.style.left = `${centerX}px`;
+                espLine.style.top = `${centerY}px`;
+                espLine.style.width = `${length}px`;
+                espLine.style.transform = `rotate(${angle}rad)`;
+                espLine.style.opacity = opacity * 0.7;
+                espLine.style.background = isEnemy ? 'var(--enemy)' : 'var(--teammate)';
+                
+                wallhackDemo.appendChild(espLine);
+                espLines.push(espLine);
+            });
+
+            // Create ESP for items
+            if (showI) {
+                items.forEach(item => {
+                    visibleItems++;
+                    
+                    const rect = item.getBoundingClientRect();
+                    const demoRect = wallhackDemo.getBoundingClientRect();
+                    
+                    const itemX = rect.left - demoRect.left;
+                    const itemY = rect.top - demoRect.top;
+                    
+                    const espBox = document.createElement('div');
+                    espBox.className = 'esp-box';
+                    espBox.style.left = `${itemX - 10}px`;
+                    espBox.style.top = `${itemY - 10}px`;
+                    espBox.style.width = `${rect.width + 20}px`;
+                    espBox.style.height = `${rect.height + 20}px`;
+                    espBox.style.borderColor = 'var(--item)';
+                    espBox.style.opacity = opacity;
+                    espBox.style.borderRadius = '50%';
+                    
+                    wallhackDemo.appendChild(espBox);
+                    espBoxes.push(espBox);
+                });
+            }
+
+            // Update info panel
+            document.getElementById('visiblePlayers').textContent = visiblePlayers;
+            document.getElementById('visibleItems').textContent = visibleItems;
+            document.getElementById('maxDistance').textContent = `${distance}m`;
+        }
+
+        function resetDemo() {
+            players.forEach(player => player.remove());
+            items.forEach(item => item.remove());
+            walls.forEach(wall => wall.remove());
+            espBoxes.forEach(box => box.remove());
+            espLines.forEach(line => line.remove());
+            
+            players = [];
+            items = [];
+            walls = [];
+            espBoxes = [];
+            espLines = [];
+            
+            initDemo();
+        }
+
+        // Event listeners
+        espToggle.addEventListener('change', (e) => {
+            isEspActive = e.target.checked;
+            updateESP();
+        });
+
+        espDistance.addEventListener('input', updateESP);
+        espOpacity.addEventListener('input', updateESP);
+        showEnemies.addEventListener('change', updateESP);
+        showTeammates.addEventListener('change', updateESP);
+        showItems.addEventListener('change', updateESP);
+        showHealth.addEventListener('change', updateESP);
+        resetBtn.addEventListener('click', resetDemo);
+
+        // Initialize demo
+        initDemo();
+
+        // Update ESP periodically for moving players
+        setInterval(updateESP, 100);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
